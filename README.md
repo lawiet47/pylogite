@@ -1,4 +1,4 @@
-# PyloGite
-Metamorphic Code Generator &amp; Loader
+# PyloGite - Metamorphic Code Generator &amp; Loader
+
 
 ![](png/pylogite.PNG)
