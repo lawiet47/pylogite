@@ -5,7 +5,7 @@
 
 # What is it?
 
-Pylogite is a metamorphic code generator. The tool's aim is to take a Position independent shellcode obfuscate it by changing/deleting/adding x86 instructions.
+Pylogite is a metamorphic code generator. The tool's aim is to take a Position independent shellcode obfuscate it by changing/deleting/adding x86 instructions and inject it into the given benign PE file.
 
 ![](png/pylogite.gif)
 
