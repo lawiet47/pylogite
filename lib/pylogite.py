@@ -4,8 +4,8 @@ from optparse import OptionParser
 
 def main():
     print_banner()
-    logging.log(WARNING, "THIS SCRIPT HAS TO RUN WITH PYTHON>V3 & CAPSTONE>V1")
-    logging.log(WARNING, "THIS SCRIPT ONLY SUPPORTS BINRARIES WITH X86_64 ARCH")
+    #logging.log(WARNING, "THIS SCRIPT HAS TO RUN WITH PYTHON>V3 & CAPSTONE>V1")
+    #logging.log(WARNING, "THIS SCRIPT ONLY SUPPORTS BINRARIES WITH X86_64 ARCH")
 
     parser = OptionParser()
 
