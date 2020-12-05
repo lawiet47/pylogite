@@ -32,3 +32,7 @@ Currently static immediate values that are being moved with `mov` instructions a
 Below are two different outputs of the same shellcode:
 
 ![](png/pylogite_diff.PNG)
+
+Below is the section info for the original benign PE file and the modified version of it
+
+![](png/pylogite_sections.PNG)
