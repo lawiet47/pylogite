@@ -81,8 +81,10 @@ def main():
     logging.log(INFO, "Updating the shellcode bytearray with modified instructions")
     for i in range(0, len(obfs.pasm.mov_array)):
         obfs.mpe.shellcode_bytes = insert_bytes(obfs.mpe.shellcode_bytes, obfs.pasm.mov_array[i].addr + obfs.pasm.mov_array[i].size, obfs.pasm.mov_array[i].postbytes)
-        obfs.mpe.shellcode_bytes = obfs.fix_jmps(obfs.mpe.shellcode_bytes, obfs.pasm.mov_array[i].addr + obfs.pasm.mov_array[i].size, obfs.pasm.mov_array[i].postbytes)
-        obfs.mpe.shellcode_bytes = obfs.fix_movs(obfs.mpe.shellcode_bytes)
+        obfs.fix_jmps(obfs.pasm.mov_array[i].addr + obfs.pasm.mov_array[i].size, len(obfs.pasm.mov_array[i].postbytes))
+        obfs.fix_movs(obfs.pasm.mov_array[i].addr + obfs.pasm.mov_array[i].size, len(obfs.pasm.mov_array[i].postbytes))
+        obfs.update_jmps()
+        obfs.update_movs()
 
     obfs.set_iterations(options.obfs_iterations)
     logging.log(INFO, "Obfuscating the shellcode bytearray with the repetition of {0}".format(obfs.iterations))
