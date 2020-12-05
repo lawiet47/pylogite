@@ -33,6 +33,28 @@ Below are two different outputs of the same shellcode:
 
 ![](png/pylogite_diff.PNG)
 
-Below is the section info for the original benign PE file and the modified version of it
+Below is the section info for the original Microsoft Signed `cmd.exe` and the modified version of it.
 
-![](png/pylogite_sections.PNG)
+### Original:
+
+| Name | RVA | Size | Permissions | Entropy |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| .text | 0x1000 | 0x2f000 | READ_EXECUTE | 6.37579802 |
+| .rdata | 0x30000 | 0xb000 | READ_ONLY | 4.89710901 |
+| .data | 0x3b000 | 0x1c000 | READ_WRITE | 3.24267717 |
+| .pdata | 0x57000 | 0x3000 | READ_ONLY | 5.42258726 |
+| .didat | 0x5a000 | 0x1000 | READ_WRITE | 1.02781326 |
+| .rsrc | 0x5b000 | 0x9000 | READ_ONLY | 4.35942953 |
+| .reloc | 0x64000 | 0x1000 | READ_ONLY | 4.58648411 |
+
+### Modified:
+
+| Name | RVA | Size | Permissions | Entropy |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| .text | 0x1000 | 0x2f000 | READ_EXECUTE | 6.38199005 |
+| .rdata | 0x30000 | 0xb000 | READ_ONLY | 4.89710901 |
+| .data | 0x3b000 | 0x1c000 | READ_WRITE | 3.24267717 |
+| .pdata | 0x57000 | 0x3000 | READ_ONLY | 5.42258726 |
+| .didat | 0x5a000 | 0x1000 | READ_WRITE | 1.02781326 |
+| .rsrc | 0x5b000 | 0x9000 | READ_ONLY | 4.35942953 |
+| .reloc | 0x64000 | 0x1000 | READ_ONLY | 4.58648411 |
