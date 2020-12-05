@@ -98,7 +98,7 @@ class OBFS:
                     self.pasm.jmp_array[j].opcode = self.opcode_short_to_near(self.pasm.jmp_array[j].bytes)
                     self.pasm.jmp_array[j].bytes = bytearray(self.pasm.jmp_array[j].opcode + self.pasm.jmp_array[j].offset.to_bytes(4, byteorder='little', signed=True))
 
-                self.adjust_movs(rindex, added_bytes)
+                self.fix_movs(rindex, added_bytes)
 
             for x in range(0, len(self.pasm.jmp_array)):
                 rbytes = insert_bytes(rbytes, (self.pasm.jmp_array[x].addr + self.pasm.jmp_array[x].oldsize), self.pasm.jmp_array[x].bytes[self.pasm.jmp_array[x].oldsize:])
@@ -106,10 +106,10 @@ class OBFS:
 
         return rbytes
 
-    def fix_jmps(self, rbytes, rindex, added_bytes):
+    def fix_jmps(self, rindex, added_bytes):
 
         for j in range(0, len(self.pasm.jmp_array)):
-            if len(added_bytes) == 0:
+            if added_bytes == 0:
                 continue
 
             # Forward jmps
@@ -117,15 +117,15 @@ class OBFS:
                 # Inserted below the jmp
                 if rindex > self.pasm.jmp_array[j].addr:
                     if rindex < self.pasm.jmp_array[j].label:
-                        self.pasm.jmp_array[j].offset += len(added_bytes)
+                        self.pasm.jmp_array[j].offset += added_bytes
                     elif rindex > self.pasm.jmp_array[j].label:
                         pass
                     else:
-                        self.pasm.jmp_array[j].offset += len(added_bytes)
+                        self.pasm.jmp_array[j].offset += added_bytes
                 # Inserted above the jmp
                 elif rindex <= self.pasm.jmp_array[j].addr:
-                    self.pasm.jmp_array[j].addr += len(added_bytes)
-                # Inserted onto the jmp (should not happen)
+                    self.pasm.jmp_array[j].addr += added_bytes
+                # Inserted onto the jmp (should never happen)
                 #else:
                 #    print("Rindex: {0} == Jmp_Addr: {1}".format(hex(rindex), hex(self.pasm.jmp_array[j].addr)))
                 #    sys.exit(0)
@@ -137,12 +137,12 @@ class OBFS:
                 # Inserted above the jmp
                 elif rindex <= self.pasm.jmp_array[j].addr:
                     if rindex > self.pasm.jmp_array[j].label:
-                        self.pasm.jmp_array[j].offset -= len(added_bytes)
+                        self.pasm.jmp_array[j].offset -= added_bytes
                     elif rindex < self.pasm.jmp_array[j].label:
                         pass
                     else:
-                        self.pasm.jmp_array[j].offset -= len(added_bytes)
-                    self.pasm.jmp_array[j].addr += len(added_bytes)
+                        self.pasm.jmp_array[j].offset -= added_bytes
+                    self.pasm.jmp_array[j].addr += added_bytes
                 # Inserted onto the jmp (should never happen)
                 #else:
                 #    print("Rindex: {0} == Jmp_Addr: {1}".format(hex(rindex), hex(self.pasm.jmp_array[j].addr)))
@@ -157,21 +157,10 @@ class OBFS:
             self.pasm.jmp_array[j].opcode = self.opcode_short_to_near(self.pasm.jmp_array[j].bytes)
             self.pasm.jmp_array[j].bytes = bytearray(self.pasm.jmp_array[j].opcode + self.pasm.jmp_array[j].offset.to_bytes(4, byteorder='little',signed=True))
 
-        self.adjust_movs(rindex, len(added_bytes))
-        for j in range(0, len(self.pasm.jmp_array)):
-            rbytes = replace_bytes(rbytes, self.pasm.jmp_array[j].addr, len(self.pasm.jmp_array[j].bytes), self.pasm.jmp_array[j].bytes)
-
-        return rbytes
-
-    def adjust_movs(self, rindex, added_bytes):
+    def fix_movs(self, rindex, added_bytes):
         for j in range(0, len(self.pasm.mov_array)):
             if rindex <= self.pasm.mov_array[j].addr:
                 self.pasm.mov_array[j].addr += added_bytes
-
-    def fix_movs(self, rbytes):
-        for j in range(0, len(self.pasm.mov_array)):
-            rbytes = replace_bytes(rbytes, self.pasm.mov_array[j].addr, len(self.pasm.mov_array[j].bytes), self.pasm.mov_array[j].bytes)
-        return rbytes
 
     def obfuscate_movs(self):
         if len(self.pasm.mov_array) > 0:
@@ -205,6 +194,13 @@ class OBFS:
                 xop += op
                 self.pasm.mov_array[i].postbytes = self.pasm.assemble(xop)
 
+    def update_movs(self):
+        for j in range(0, len(self.pasm.mov_array)):
+            self.mpe.shellcode_bytes = replace_bytes(self.mpe.shellcode_bytes, self.pasm.mov_array[j].addr, len(self.pasm.mov_array[j].bytes), self.pasm.mov_array[j].bytes)
+
+    def update_jmps(self):
+        for j in range(0, len(self.pasm.jmp_array)):
+            self.mpe.shellcode_bytes = replace_bytes(self.mpe.shellcode_bytes, self.pasm.jmp_array[j].addr, len(self.pasm.jmp_array[j].bytes), self.pasm.jmp_array[j].bytes)
 
     @staticmethod
     def dice_roll():
@@ -268,7 +264,9 @@ class OBFS:
             rindex = valid_indexes[random.randint(0, len(valid_indexes) - 1)]
             # Insert the bytes and fix the shellcode bytearray
             self.mpe.shellcode_bytes = insert_bytes(self.mpe.shellcode_bytes, rindex, self.last_garbage_bytes)
-            self.mpe.shellcode_bytes = self.fix_jmps(self.mpe.shellcode_bytes, rindex, self.last_garbage_bytes)
+            self.fix_jmps(rindex, len(self.last_garbage_bytes))
+            self.fix_movs(rindex, len(self.last_garbage_bytes))
+            self.update_jmps()
 
         return self.mpe.shellcode_bytes
 
