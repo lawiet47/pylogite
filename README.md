@@ -26,3 +26,5 @@ Pylogite is a metamorphic code generator. The tool's aim is to take a Position i
 The program takes a Position independent shellcode (must not have anything in .data/.rdata section) and obfuscates it by changing already existing instructions with new x86 instructions which perform the same action but are different in size. Program can also insert garbage instructions consisting of branches, calls, unsafe registry arithmetics anywhere in the code Hopefully achieving metamorphism.
 
 Currently static immediate values that are being moved with `mov` instructions are obfuscated to hide signature values. Later on immediate values that are being used in `cmp`, `push`, `add` and `sub` instructions will also be obfuscated.
+
+![](png/pylogite_diff.png)
