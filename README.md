@@ -29,4 +29,6 @@ The program takes a Position independent shellcode (must not have anything in .d
 
 Currently static immediate values that are being moved with `mov` instructions are obfuscated to hide signature values. Later on immediate values that are being used in `cmp`, `push`, `add` and `sub` instructions will also be obfuscated.
 
+Below are two different outputs of the same shellcode:
+
 ![](png/pylogite_diff.PNG)
