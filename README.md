@@ -15,11 +15,13 @@ Pylogite is a metamorphic code generator. The tool's aim is to take a Position i
 | ------------- | ------------- |
 | Insert garbage instructions  | :heavy_check_mark: |
 | Obfuscate relative branch instructions  | :heavy_check_mark:  |
+| Graph view destruction | :heavy_check_mark: |
 | Obfuscate mov instructions  | :heavy_check_mark:  |
 | Unsafe registry arithmetics | :heavy_check_mark: |
 | Obfuscate push/pop instructions | :heavy_check_mark: |
 | Obfuscate cmp instructions | TODO |
-| Add SSE instructions | TODO
+| Add SSE instructions | TODO |
+| Control Flow Deception | TODO |
 
 # How?
 
