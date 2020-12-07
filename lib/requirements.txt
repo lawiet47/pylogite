@@ -1,0 +1,6 @@
+keystone-engine
+capstone
+colorama
+colorlog
+logging
+pefile
